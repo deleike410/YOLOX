@@ -89,10 +89,11 @@ class COCODataset(Dataset):
         im_ann = self.coco.loadImgs(id_)[0]
         width = im_ann["width"]
         height = im_ann["height"]
+        name_f = im_ann["file_name"]
 
         # load image and preprocess
         img_file = os.path.join(
-            self.data_dir, self.name, "{:012}".format(id_) + ".jpg"
+            self.data_dir, self.name, name_f
         )
 
         img = cv2.imread(img_file)

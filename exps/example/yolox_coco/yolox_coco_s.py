@@ -12,7 +12,7 @@ from yolox.data import get_yolox_datadir, ConcatDataset, MixConcatDataset
 class Exp(MyExp):
     def __init__(self):
         super(Exp, self).__init__()
-        self.num_classes = 1
+        self.num_classes = 2
         self.depth = 0.33
         self.width = 0.50
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
@@ -22,11 +22,11 @@ class Exp(MyExp):
         self.train_ann = "train.json"
         self.val_ann = "train.json"   # 这里也是train.json
         self.yolox_datadir = "/path/to/your/datasets"  # /COCO
-        self.data_train_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_v2",
-                                "/home/llsq/DATA/myCoco/ball/basketball/gx_v3",
-                                "/home/llsq/DATA/myCoco/ball/basketball/gx_v4",
-                                "/home/llsq/DATA/myCoco/ball/basketball/gx_v5",
-                                "/home/llsq/DATA/myCoco/ball/basketball/gx_video1"
+        self.data_train_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_v2"
+                                # "/home/llsq/DATA/myCoco/ball/basketball/gx_v3",
+                                # "/home/llsq/DATA/myCoco/ball/basketball/gx_v4",
+                                # "/home/llsq/DATA/myCoco/ball/basketball/gx_v5",
+                                # "/home/llsq/DATA/myCoco/ball/basketball/gx_video1"
                                 ]
         self.data_val_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_v1"]
         self.data_test_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_v1"]
@@ -46,6 +46,7 @@ class Exp(MyExp):
             dataset = COCODataset(
                 data_dir=train_data_dir,
                 json_file=self.train_ann,
+                name="images",
                 img_size=self.input_size,
                 preproc=TrainTransform(
                     rgb_means=(0.485, 0.456, 0.406),
