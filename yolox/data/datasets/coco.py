@@ -45,6 +45,7 @@ class COCODataset(Dataset):
         self.class_ids = sorted(self.coco.getCatIds())
         cats = self.coco.loadCats(self.coco.getCatIds())
         self._classes = tuple([c["name"] for c in cats])
+        self.annotations = self._load_coco_annotations()
         self.name = name
         self.img_size = img_size
         self.preproc = preproc
@@ -52,14 +53,15 @@ class COCODataset(Dataset):
     def __len__(self):
         return len(self.ids)
 
-    def load_anno(self, index):
-        id_ = self.ids[index]
-        anno_ids = self.coco.getAnnIds(imgIds=[int(id_)], iscrowd=False)
-        annotations = self.coco.loadAnns(anno_ids)
+    def _load_coco_annotations(self):
+        return [self.load_anno_from_ids(_ids) for _ids in self.ids]
 
+    def load_anno_from_ids(self, id_):
         im_ann = self.coco.loadImgs(id_)[0]
         width = im_ann["width"]
         height = im_ann["height"]
+        anno_ids = self.coco.getAnnIds(imgIds=[int(id_)], iscrowd=False)
+        annotations = self.coco.loadAnns(anno_ids)
 
         # load labels
         valid_objs = []
@@ -81,29 +83,30 @@ class COCODataset(Dataset):
             res[ix, 0:4] = obj["clean_bbox"]
             res[ix, 4] = cls
 
-        return res
+        img_info = (height, width)
+
+        file_name = im_ann["file_name"] if "file_name" in im_ann else "{:012}".format(id_) + ".jpg"
+
+        del im_ann, annotations
+
+        return (res, img_info, file_name)
+
+    def load_anno(self, index):
+        return self.annotations[index][0]
 
     def pull_item(self, index):
         id_ = self.ids[index]
 
-        im_ann = self.coco.loadImgs(id_)[0]
-        width = im_ann["width"]
-        height = im_ann["height"]
-        name_f = im_ann["file_name"]
-
+        res, img_info, file_name = self.annotations[index]
         # load image and preprocess
         img_file = os.path.join(
-            self.data_dir, self.name, name_f
+            self.data_dir, self.name, file_name
         )
 
         img = cv2.imread(img_file)
         assert img is not None
 
-        # load anno
-        res = self.load_anno(index)
-        img_info = (height, width)
-
-        return img, res, img_info, id_
+        return img, res, img_info, np.array(id_)
 
     @Dataset.resize_getitem
     def __getitem__(self, index):
@@ -127,8 +130,8 @@ class COCODataset(Dataset):
                 dx, dy (int): pad size
             img_id (int): same as the input index. Used for evaluation.
         """
-        img, res, img_info, img_id = self.pull_item(index)
+        img, target, img_info, img_id = self.pull_item(index)
 
         if self.preproc is not None:
-            img, target = self.preproc(img, res, self.input_dim)
+            img, target = self.preproc(img, target, self.input_dim)
         return img, target, img_info, img_id
