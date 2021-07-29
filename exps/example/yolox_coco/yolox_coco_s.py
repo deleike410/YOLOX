@@ -29,8 +29,8 @@ class Exp(MyExp):
                                 # "/home/llsq/DATA/myCoco/ball/basketball/gx_v5",
                                 # "/home/llsq/DATA/myCoco/ball/basketball/gx_video1"
                                 ]
-        self.data_val_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_v1"]
-        self.data_test_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_v1"]
+        self.data_val_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_video1"]
+        self.data_test_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_video1"]
 
     def get_data_loader(self, batch_size, is_distributed, no_aug=False):
         from yolox.data import (
@@ -75,7 +75,7 @@ class Exp(MyExp):
             # self.dataset = dataset
             data_sets.append(dataset)
 
-        self.dataset = MixConcatDataset(data_sets)
+        self.dataset = ConcatDataset(data_sets)
 
         if is_distributed:
             batch_size = batch_size // dist.get_world_size()
@@ -112,7 +112,7 @@ class Exp(MyExp):
                 ),
             )
             data_val_sets.append(valdataset)
-        valdatasets = MixConcatDataset(data_val_sets)
+        valdatasets = ConcatDataset(data_val_sets)
 
         if is_distributed:
             batch_size = batch_size // dist.get_world_size()

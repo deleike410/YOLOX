@@ -41,18 +41,18 @@ class MixConcatDataset(torchConcatDataset):
     def __getitem__(self, index):
 
         if not isinstance(index, int):
-            idx = index[1]
-        if idx < 0:
-            if -idx > len(self):
+            index = index[1]
+        if index < 0:
+            if -index > len(self):
                 raise ValueError(
                     "absolute value of index should not exceed dataset length"
                 )
-            idx = len(self) + idx
-        dataset_idx = bisect.bisect_right(self.cumulative_sizes, idx)
+            index = len(self) + index
+        dataset_idx = bisect.bisect_right(self.cumulative_sizes, index)
         if dataset_idx == 0:
-            sample_idx = idx
+            sample_idx = index
         else:
-            sample_idx = idx - self.cumulative_sizes[dataset_idx - 1]
+            sample_idx = index - self.cumulative_sizes[dataset_idx - 1]
         if not isinstance(index, int):
             index = (index[0], sample_idx, index[2])
 

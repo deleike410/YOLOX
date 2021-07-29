@@ -48,6 +48,7 @@ class COCOEvaluator:
         self.nmsthre = nmsthre
         self.num_classes = num_classes
         self.testdev = testdev
+        self.class_ids = [x for x in range(num_classes)]
 
     def evaluate(
         self,
@@ -154,7 +155,7 @@ class COCOEvaluator:
             cls = output[:, 6]
             scores = output[:, 4] * output[:, 5]
             for ind in range(bboxes.shape[0]):
-                label = self.dataloader.dataset.class_ids[int(cls[ind])]
+                label = self.class_ids[int(cls[ind])]
                 pred_data = {
                     "image_id": int(img_id),
                     "category_id": label,
@@ -194,7 +195,7 @@ class COCOEvaluator:
 
         # Evaluate the Dt (detection) json comparing with the ground truth
         if len(data_dict) > 0:
-            cocoGt = self.dataloader.dataset.coco
+            cocoGt = self.dataloader.dataset.datasets[0].coco
             # TODO: since pycocotools can't process dict in py36, write data to json file.
             if self.testdev:
                 json.dump(data_dict, open("./yolox_testdev_2017.json", "w"))
