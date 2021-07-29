@@ -24,8 +24,8 @@ class Exp(MyExp):
         self.val_ann = "train.json"   # 这里也是train.json
         self.yolox_datadir = "/path/to/your/datasets"  # /COCO
         self.data_train_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_v2"
-                                # "/home/llsq/DATA/myCoco/ball/basketball/gx_v3",
-                                # "/home/llsq/DATA/myCoco/ball/basketball/gx_v4",
+                                "/home/llsq/DATA/myCoco/ball/basketball/gx_v3",
+                                "/home/llsq/DATA/myCoco/ball/basketball/gx_v4",
                                 # "/home/llsq/DATA/myCoco/ball/basketball/gx_v5",
                                 # "/home/llsq/DATA/myCoco/ball/basketball/gx_video1"
                                 ]
