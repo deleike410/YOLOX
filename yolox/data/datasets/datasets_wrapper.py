@@ -56,7 +56,7 @@ class MixConcatDataset(torchConcatDataset):
         if not isinstance(index, int):
             index = (index[0], sample_idx, index[2])
 
-        return self.datasets[dataset_idx][index]
+        return self.datasets[dataset_idx][sample_idx]
 
 
 class Dataset(torchDataset):

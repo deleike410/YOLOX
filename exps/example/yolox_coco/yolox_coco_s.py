@@ -15,7 +15,7 @@ class Exp(MyExp):
         self.num_classes = 2
         self.depth = 0.33
         self.width = 0.50
-        self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
+        self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0] + "1"
         self.max_epoch = 3
 
         self.input_size = (640, 640)
@@ -23,14 +23,15 @@ class Exp(MyExp):
         self.train_ann = "train.json"
         self.val_ann = "train.json"   # 这里也是train.json
         self.yolox_datadir = "/path/to/your/datasets"  # /COCO
-        self.data_train_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_v2"
+        self.data_train_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_v2",
                                 "/home/llsq/DATA/myCoco/ball/basketball/gx_v3",
-                                "/home/llsq/DATA/myCoco/ball/basketball/gx_v4",
+                                "/home/llsq/DATA/myCoco/ball/basketball/gx_v4"
                                 # "/home/llsq/DATA/myCoco/ball/basketball/gx_v5",
                                 # "/home/llsq/DATA/myCoco/ball/basketball/gx_video1"
                                 ]
         self.data_val_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_video1"]
         self.data_test_dirs = ["/home/llsq/DATA/myCoco/ball/basketball/gx_video1"]
+        self.output_dir = ""
 
     def get_data_loader(self, batch_size, is_distributed, no_aug=False):
         from yolox.data import (
