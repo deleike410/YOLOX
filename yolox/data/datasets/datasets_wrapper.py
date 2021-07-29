@@ -41,7 +41,7 @@ class MixConcatDataset(torchConcatDataset):
     def __getitem__(self, index):
 
         if not isinstance(index, int):
-            index = index[1]
+            index = index[1].item()
         if index < 0:
             if -index > len(self):
                 raise ValueError(

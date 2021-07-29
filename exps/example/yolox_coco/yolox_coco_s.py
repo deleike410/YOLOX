@@ -75,7 +75,7 @@ class Exp(MyExp):
             # self.dataset = dataset
             data_sets.append(dataset)
 
-        self.dataset = ConcatDataset(data_sets)
+        self.dataset = MixConcatDataset(data_sets)
 
         if is_distributed:
             batch_size = batch_size // dist.get_world_size()
